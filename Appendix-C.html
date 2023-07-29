@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Afra Kilic, Supervisor: dr. ir. Joris Mulder" />
+
+<meta name="date" content="2023-07-29" />
+
+<title>Appendix-C</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Appendix-C</h1>
+<h4 class="author">Afra Kilic, Supervisor: dr. ir. Joris Mulder</h4>
+<h4 class="date">2023-07-29</h4>
+
+
+
+<div id="real-data-examples" class="section level2">
+<h2>Real Data Examples</h2>
+<p>In this section two real data examples are used to illustrate the proposed variable selection. In particular we apply MCMC model search method to real datasets with relatively large number of candidate variables. To address potentially more complex nonlinear relationships, we set <code>k = 6</code> and performed 2,000 iterations for both examples.</p>
+<div id="libraries" class="section level3">
+<h3>libraries</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(mgcv)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(data.table)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(MCMCprecision)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(lubridate)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(progress)</span></code></pre></div>
+</div>
+<div id="mcmc-model-search-function" class="section level3">
+<h3>MCMC Model Search Function</h3>
+<p> </p>
+<p>The following function function <code>bayesian_selection</code> returns;</p>
+<p><br />
+</p>
+<ul>
+<li>Posterior probability of the selected model</li>
+<li>Selected model</li>
+<li><span class="math inline">\(\gamma\)</span> draws in</li>
+<li><span class="math inline">\(p_r\)</span> draws in</li>
+</ul>
+<p><br />
+</p>
+<p>Input variables:</p>
+<ul>
+<li><code>data_original</code>: matrix of predictor variables</li>
+<li><code>y</code>: the outcome variable</li>
+<li><code>knots</code>: k (number of basis function = k-1)</li>
+<li><code>iteration</code>: burn-in</li>
+<li><code>gamma_prior</code>: initial <span class="math inline">\(\gamma\)</span> values (<span class="math inline">\(\gamma_{1}^{0},...,\gamma_{P}^{0}\)</span>)</li>
+<li><code>prior_p</code>: initial <span class="math inline">\(p_r\)</span> values (<span class="math inline">\(p_r^0\)</span>)</li>
+</ul>
+<p><br />
+</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#MCMC CHAIN FUNCTION</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>bayesian_selection &lt;-<span class="st"> </span><span class="cf">function</span>(data_original, <span class="co">#matrix of predictor variables </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>                               y, <span class="co">#the outcome variable</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>                               <span class="dt">knots=</span> <span class="dv">4</span>, <span class="co">#number of knots</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>                               <span class="dt">iteration=</span><span class="dv">2000</span>, <span class="co">#burn-in</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>                               <span class="dt">gamma_prior =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, n_var)), <span class="co">#initial gamma values set to zero </span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>                               <span class="dt">prior_p=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)) { <span class="co">#initial probabilities for each effect type set to equal probabilities as 1/3. )</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  </span>
+<span id="cb2-9"><a href="#cb2-9"></a>  penalty=knots<span class="dv">-2</span>, <span class="co">#adjusted degrees of freedom for each smooth</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  n  =<span class="st"> </span><span class="kw">dim</span>(data_original)[<span class="dv">1</span>] <span class="co">#sample Size </span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>  n_var =<span class="st"> </span><span class="kw">dim</span>(data_original)[<span class="dv">2</span>] <span class="co">#total number of predictor variables</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>  gamma_update_k &lt;-gamma_prior <span class="co">#initial gamma specification</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>  gamma_draws &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow=</span> iteration, <span class="dt">ncol =</span> n_var) <span class="co">#matrix for gamma draws</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>  ps&lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> iteration<span class="op">+</span><span class="dv">1</span>, <span class="dt">ncol =</span> <span class="dv">3</span>) <span class="co">#matrix for p_draws</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>  </span>
+<span id="cb2-16"><a href="#cb2-16"></a>  pb&lt;-progress_bar<span class="op">$</span><span class="kw">new</span>(<span class="dt">format =</span> <span class="st">&quot;(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]&quot;</span>,</span>
+<span id="cb2-17"><a href="#cb2-17"></a>                       <span class="dt">total =</span> iteration,</span>
+<span id="cb2-18"><a href="#cb2-18"></a>                       <span class="dt">complete =</span> <span class="st">&quot;=&quot;</span>,   <span class="co"># Completion bar character</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>                       <span class="dt">incomplete =</span> <span class="st">&quot;-&quot;</span>, <span class="co"># Incomplete bar character</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>                       <span class="dt">current =</span> <span class="st">&quot;&gt;&quot;</span>,    <span class="co"># Current bar character</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a>                       <span class="dt">clear =</span> <span class="ot">FALSE</span>,    <span class="co"># If TRUE, clears the bar when finish</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>                       <span class="dt">width =</span> <span class="dv">100</span>)      <span class="co"># Width of the progress bar</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>  </span>
+<span id="cb2-24"><a href="#cb2-24"></a>  <span class="cf">for</span>(s <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>iteration){</span>
+<span id="cb2-25"><a href="#cb2-25"></a>    pb<span class="op">$</span><span class="kw">tick</span>()</span>
+<span id="cb2-26"><a href="#cb2-26"></a>    <span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n_var){</span>
+<span id="cb2-27"><a href="#cb2-27"></a>      data =<span class="st"> </span>data_original</span>
+<span id="cb2-28"><a href="#cb2-28"></a>      gamma_update_k1 &lt;-<span class="st"> </span>gamma_update_k[<span class="op">-</span><span class="kw">c</span>(k)]</span>
+<span id="cb2-29"><a href="#cb2-29"></a>      </span>
+<span id="cb2-30"><a href="#cb2-30"></a>      a &lt;-<span class="st"> </span>data[, k] <span class="co">#the variable of interest </span></span>
+<span id="cb2-31"><a href="#cb2-31"></a>      data &lt;-<span class="st"> </span>data[, <span class="op">-</span>k] <span class="co">#the remaining variables </span></span>
+<span id="cb2-32"><a href="#cb2-32"></a>      </span>
+<span id="cb2-33"><a href="#cb2-33"></a>      <span class="co"># for linear effects</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a>      linears &lt;-<span class="st"> </span><span class="kw">c</span>()</span>
+<span id="cb2-35"><a href="#cb2-35"></a>      <span class="cf">if</span>(<span class="kw">length</span>(gamma_update_k1[gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>]) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>){</span>
+<span id="cb2-36"><a href="#cb2-36"></a>        </span>
+<span id="cb2-37"><a href="#cb2-37"></a>        <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(data[<span class="kw">which</span>(gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)])){</span>
+<span id="cb2-38"><a href="#cb2-38"></a>          linears &lt;-<span class="st"> </span><span class="kw">c</span>(linears, <span class="kw">paste</span>(<span class="kw">c</span>(<span class="kw">colnames</span>(data[<span class="kw">which</span>(gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)][i])), <span class="dt">collapse=</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb2-39"><a href="#cb2-39"></a>        } </span>
+<span id="cb2-40"><a href="#cb2-40"></a>      }</span>
+<span id="cb2-41"><a href="#cb2-41"></a>      </span>
+<span id="cb2-42"><a href="#cb2-42"></a>      <span class="co">#for nonlinear effects</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a>      non_linears &lt;-<span class="st"> </span><span class="kw">c</span>()</span>
+<span id="cb2-44"><a href="#cb2-44"></a>      <span class="cf">if</span>(<span class="kw">length</span>(gamma_update_k1[gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>]) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb2-45"><a href="#cb2-45"></a>        <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(data[<span class="kw">which</span>(gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)])){</span>
+<span id="cb2-46"><a href="#cb2-46"></a>          non_linears &lt;-<span class="st"> </span><span class="kw">c</span>(non_linears, <span class="kw">paste</span>(<span class="kw">c</span>(<span class="st">&#39;s(&#39;</span>, <span class="kw">colnames</span>(data[<span class="kw">which</span>(gamma_update_k1 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)][i]), <span class="st">&#39;,k=&#39;</span>,knots,<span class="st">&#39;)&#39;</span>), <span class="dt">collapse=</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb2-47"><a href="#cb2-47"></a>        } </span>
+<span id="cb2-48"><a href="#cb2-48"></a>      }</span>
+<span id="cb2-49"><a href="#cb2-49"></a>      </span>
+<span id="cb2-50"><a href="#cb2-50"></a>      vars &lt;-<span class="st"> </span><span class="kw">c</span>(linears, non_linears) <span class="co">#vector for non-zero effects to include to the models below</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a>      </span>
+<span id="cb2-52"><a href="#cb2-52"></a>      <span class="cf">if</span>(<span class="kw">length</span>(<span class="kw">unique</span>(a)) <span class="op">==</span><span class="st"> </span><span class="dv">2</span>){ <span class="co">#if the variable of interest (a) is a categorical variables with two levels</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a>        </span>
+<span id="cb2-54"><a href="#cb2-54"></a>        <span class="cf">if</span>(<span class="kw">length</span>(vars) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>){ <span class="co">#remaining variables contain non-zero effect</span></span>
+<span id="cb2-55"><a href="#cb2-55"></a>          M1 &lt;-<span class="st"> </span><span class="kw">gam</span>(<span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;~ 1 + &#39;</span>, <span class="kw">paste</span>(vars, <span class="dt">collapse =</span>  <span class="st">&quot;+&quot;</span>))), <span class="dt">data =</span> data)</span>
+<span id="cb2-56"><a href="#cb2-56"></a>          M2 &lt;-<span class="st"> </span><span class="kw">gam</span>(<span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&#39;y&#39;</span>,  <span class="st">&#39;~&#39;</span>, <span class="st">&#39;1 + a +&#39;</span>, <span class="kw">paste</span>(vars, <span class="dt">collapse =</span>  <span class="st">&quot;+&quot;</span>))), <span class="dt">data =</span> data) <span class="co">#1</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a>        } <span class="cf">else</span>{ <span class="co">#remaining variables do not contain non-zero effect</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a>          M1 &lt;-<span class="st"> </span><span class="kw">gam</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> data)</span>
+<span id="cb2-59"><a href="#cb2-59"></a>          M2 &lt;-<span class="st"> </span><span class="kw">gam</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">1</span>  <span class="op">+</span><span class="st"> </span>a, <span class="dt">data =</span> data) <span class="co">#1</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a>        }</span>
+<span id="cb2-61"><a href="#cb2-61"></a>        </span>
+<span id="cb2-62"><a href="#cb2-62"></a>        <span class="co">#BIC scores </span></span>
+<span id="cb2-63"><a href="#cb2-63"></a>        bic_M1 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">head</span>(<span class="kw">logLik</span>(M1)) <span class="op">+</span><span class="st">  </span><span class="kw">attr</span>(<span class="kw">logLik</span>(M1), <span class="st">&quot;df&quot;</span>)<span class="op">*</span><span class="st"> </span><span class="kw">log</span>(n)</span>
+<span id="cb2-64"><a href="#cb2-64"></a>        bic_M2 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">head</span>(<span class="kw">logLik</span>(M2)) <span class="op">+</span><span class="st">  </span><span class="kw">attr</span>(<span class="kw">logLik</span>(M2), <span class="st">&quot;df&quot;</span>)<span class="op">*</span><span class="st"> </span><span class="kw">log</span>(n)</span>
+<span id="cb2-65"><a href="#cb2-65"></a>        </span>
+<span id="cb2-66"><a href="#cb2-66"></a>        <span class="co">#Bayes Factors </span></span>
+<span id="cb2-67"><a href="#cb2-67"></a>        BF11  &lt;-<span class="st"> </span><span class="kw">exp</span>((bic_M1 <span class="op">-</span><span class="st"> </span>bic_M1) <span class="op">/</span><span class="dv">2</span>) <span class="co">#null against the null</span></span>
+<span id="cb2-68"><a href="#cb2-68"></a>        BF21_ &lt;-<span class="st"> </span><span class="kw">exp</span>((bic_M1 <span class="op">-</span><span class="st"> </span>bic_M2) <span class="op">/</span><span class="dv">2</span>) <span class="co">#linear against the null</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a>        BF31_ &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb2-70"><a href="#cb2-70"></a>        </span>
+<span id="cb2-71"><a href="#cb2-71"></a>        </span>
+<span id="cb2-72"><a href="#cb2-72"></a>      } <span class="cf">else</span> { <span class="co">#if the variable of interest (a) is a continuous variable</span></span>
+<span id="cb2-73"><a href="#cb2-73"></a>        </span>
+<span id="cb2-74"><a href="#cb2-74"></a>        <span class="cf">if</span>(<span class="kw">length</span>(vars) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>){ <span class="co">#remaining variables contain non-zero effect</span></span>
+<span id="cb2-75"><a href="#cb2-75"></a>          M1 &lt;-<span class="st"> </span><span class="kw">gam</span>(<span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;~ 1 +&#39;</span>, <span class="kw">paste</span>(vars, <span class="dt">collapse =</span>  <span class="st">&quot;+&quot;</span>))), <span class="dt">data =</span> data)</span>
+<span id="cb2-76"><a href="#cb2-76"></a>          M2 &lt;-<span class="st"> </span><span class="kw">gam</span>(<span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&#39;y&#39;</span>,  <span class="st">&#39;~&#39;</span>, <span class="st">&#39;1 + a +&#39;</span>, <span class="kw">paste</span>(vars, <span class="dt">collapse =</span>  <span class="st">&quot;+&quot;</span>))), <span class="dt">data =</span> data) <span class="co">#1</span></span>
+<span id="cb2-77"><a href="#cb2-77"></a>          M3 &lt;-<span class="st"> </span><span class="kw">gam</span>(<span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&#39;y&#39;</span>,  <span class="st">&#39;~&#39;</span>, <span class="st">&#39;1 + s(a, k=&#39;</span>,knots, <span class="st">&#39;) +&#39;</span>, <span class="kw">paste</span>(vars, <span class="dt">collapse =</span>  <span class="st">&quot;+&quot;</span>))), <span class="dt">data =</span> data) <span class="co">#2</span></span>
+<span id="cb2-78"><a href="#cb2-78"></a>        } <span class="cf">else</span>{ <span class="co">#remaining variables do not contain non-zero effect</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a>          M1 &lt;-<span class="st"> </span><span class="kw">gam</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> data)</span>
+<span id="cb2-80"><a href="#cb2-80"></a>          M2 &lt;-<span class="st"> </span><span class="kw">gam</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>a, <span class="dt">data =</span> data) <span class="co">#1</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a>          M3 &lt;-<span class="st"> </span><span class="kw">gam</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(a, <span class="dt">k=</span>knots), <span class="dt">data =</span> data)</span>
+<span id="cb2-82"><a href="#cb2-82"></a>        }</span>
+<span id="cb2-83"><a href="#cb2-83"></a>        </span>
+<span id="cb2-84"><a href="#cb2-84"></a>        <span class="co">#BIC scores </span></span>
+<span id="cb2-85"><a href="#cb2-85"></a>        bic_M1 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">head</span>(<span class="kw">logLik</span>(M1)) <span class="op">+</span><span class="st">  </span><span class="kw">attr</span>(<span class="kw">logLik</span>(M1), <span class="st">&quot;df&quot;</span>)<span class="op">*</span><span class="st"> </span><span class="kw">log</span>(n)</span>
+<span id="cb2-86"><a href="#cb2-86"></a>        bic_M2 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">head</span>(<span class="kw">logLik</span>(M2)) <span class="op">+</span><span class="st">  </span><span class="kw">attr</span>(<span class="kw">logLik</span>(M2), <span class="st">&quot;df&quot;</span>)<span class="op">*</span><span class="st"> </span><span class="kw">log</span>(n)</span>
+<span id="cb2-87"><a href="#cb2-87"></a>        bic_M3 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">head</span>(<span class="kw">logLik</span>(M3)) <span class="op">+</span><span class="st">  </span>(<span class="kw">attr</span>(<span class="kw">logLik</span>(M2), <span class="st">&quot;df&quot;</span>) <span class="op">+</span><span class="st"> </span>penalty)<span class="op">*</span><span class="st"> </span><span class="kw">log</span>(n) <span class="co">#penalty depends on the #of knots</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a>        </span>
+<span id="cb2-89"><a href="#cb2-89"></a>        <span class="co">#Bayes Factors </span></span>
+<span id="cb2-90"><a href="#cb2-90"></a>        BF11 &lt;-<span class="st"> </span><span class="kw">exp</span>((bic_M1 <span class="op">-</span><span class="st"> </span>bic_M1) <span class="op">/</span><span class="dv">2</span>) <span class="co">#null against the null</span></span>
+<span id="cb2-91"><a href="#cb2-91"></a>        BF21_ &lt;-<span class="st"> </span><span class="kw">exp</span>((bic_M1 <span class="op">-</span><span class="st"> </span>bic_M2) <span class="op">/</span><span class="dv">2</span>) <span class="co">#linear against the null</span></span>
+<span id="cb2-92"><a href="#cb2-92"></a>        BF31_ &lt;-<span class="st"> </span><span class="kw">exp</span>((bic_M1 <span class="op">-</span><span class="st"> </span>bic_M3) <span class="op">/</span><span class="dv">2</span>) <span class="co">#nonlinear against the null </span></span>
+<span id="cb2-93"><a href="#cb2-93"></a>      }</span>
+<span id="cb2-94"><a href="#cb2-94"></a>      </span>
+<span id="cb2-95"><a href="#cb2-95"></a>      </span>
+<span id="cb2-96"><a href="#cb2-96"></a>      <span class="co">#infinity BFs</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a>      <span class="cf">if</span>(BF21_ <span class="op">==</span><span class="st"> &quot;-Inf&quot;</span>){BF21 =<span class="st"> </span><span class="fl">-1e5</span>} <span class="cf">else</span> <span class="cf">if</span>(BF21_<span class="op">==</span><span class="st"> &quot;Inf&quot;</span>) {BF21 =<span class="st"> </span><span class="fl">1e5</span>} <span class="cf">else</span>{BF21=BF21_}</span>
+<span id="cb2-98"><a href="#cb2-98"></a>      <span class="cf">if</span>(BF31_ <span class="op">==</span><span class="st"> &quot;-Inf&quot;</span>){BF31 =<span class="st"> </span><span class="fl">-1e5</span>} <span class="cf">else</span> <span class="cf">if</span>(BF31_ <span class="op">==</span><span class="st"> &quot;Inf&quot;</span>) {BF31 =<span class="st"> </span><span class="fl">1e5</span>} <span class="cf">else</span>{BF31=BF31_}</span>
+<span id="cb2-99"><a href="#cb2-99"></a>      </span>
+<span id="cb2-100"><a href="#cb2-100"></a>      <span class="co">#Posterior Probabilities</span></span>
+<span id="cb2-101"><a href="#cb2-101"></a>      zero &lt;-<span class="st"> </span>(prior_p[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span>BF11) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior_p[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span>BF11, prior_p[<span class="dv">2</span>]<span class="op">*</span>BF21, prior_p[<span class="dv">3</span>]<span class="op">*</span><span class="st"> </span>BF31)</span>
+<span id="cb2-102"><a href="#cb2-102"></a>      one &lt;-<span class="st"> </span>(prior_p[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>BF21) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior_p[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span>BF11, prior_p[<span class="dv">2</span>]<span class="op">*</span>BF21, prior_p[<span class="dv">3</span>]<span class="op">*</span><span class="st"> </span>BF31)</span>
+<span id="cb2-103"><a href="#cb2-103"></a>      two &lt;-<span class="st"> </span>(prior_p[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>BF31) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior_p[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span>BF11, prior_p[<span class="dv">2</span>]<span class="op">*</span>BF21, prior_p[<span class="dv">3</span>]<span class="op">*</span><span class="st"> </span>BF31)</span>
+<span id="cb2-104"><a href="#cb2-104"></a>      </span>
+<span id="cb2-105"><a href="#cb2-105"></a>      </span>
+<span id="cb2-106"><a href="#cb2-106"></a>      <span class="co">#sampling the effect type of the variable of interest </span></span>
+<span id="cb2-107"><a href="#cb2-107"></a>      gamma_update_k[k] &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">prob =</span> <span class="kw">c</span>(zero, one, two)) </span>
+<span id="cb2-108"><a href="#cb2-108"></a>    }</span>
+<span id="cb2-109"><a href="#cb2-109"></a>    </span>
+<span id="cb2-110"><a href="#cb2-110"></a>    <span class="co">#multiplicity correction for the next chain </span></span>
+<span id="cb2-111"><a href="#cb2-111"></a>    prior_p &lt;-<span class="st"> </span><span class="kw">rdirichlet</span>(<span class="dv">1</span>, <span class="kw">c</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">length</span>(gamma_update_k[<span class="kw">which</span>(gamma_update_k <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)]), <span class="co">#alpha0 = 1</span></span>
+<span id="cb2-112"><a href="#cb2-112"></a>                               <span class="dv">1</span><span class="op">+</span><span class="kw">length</span>(gamma_update_k[<span class="kw">which</span>(gamma_update_k <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)]),  <span class="co">#alpha1 = 1</span></span>
+<span id="cb2-113"><a href="#cb2-113"></a>                               <span class="dv">1</span><span class="op">+</span><span class="kw">length</span>(gamma_update_k[<span class="kw">which</span>(gamma_update_k <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)])))  <span class="co">#alpha2 = 1</span></span>
+<span id="cb2-114"><a href="#cb2-114"></a>    ps[s<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>prior_p</span>
+<span id="cb2-115"><a href="#cb2-115"></a>    gamma_draws[s,] &lt;-<span class="st"> </span>gamma_update_k</span>
+<span id="cb2-116"><a href="#cb2-116"></a>  }</span>
+<span id="cb2-117"><a href="#cb2-117"></a>  <span class="co">#posterior probability calculation of the true model </span></span>
+<span id="cb2-118"><a href="#cb2-118"></a>  posterior &lt;-<span class="st"> </span><span class="kw">data.table</span>(gamma_draws)</span>
+<span id="cb2-119"><a href="#cb2-119"></a>  frequency &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(posterior[,<span class="kw">list</span>(<span class="dt">posterior=</span>.N),<span class="dt">by=</span><span class="kw">names</span>(posterior)][<span class="kw">order</span>(posterior,<span class="dt">decreasing=</span>T)]) <span class="co">#frequency table of the gamma draws</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a>  pp_s &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(frequency[<span class="dv">1</span>,(n_var<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span>iteration <span class="co">##posterior prob calculation of the selected</span></span>
+<span id="cb2-121"><a href="#cb2-121"></a>  results &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;posterior probability_selected&quot;</span> =<span class="st"> </span>pp_s,</span>
+<span id="cb2-122"><a href="#cb2-122"></a>                  <span class="st">&quot;selected model&quot;</span> =<span class="st"> </span><span class="kw">as.vector</span>(frequency[<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>n_var]),</span>
+<span id="cb2-123"><a href="#cb2-123"></a>                  <span class="st">&quot;gamma draws&quot;</span> =<span class="st"> </span>gamma_draws,</span>
+<span id="cb2-124"><a href="#cb2-124"></a>                  <span class="st">&quot;p draws&quot;</span> =<span class="st"> </span>ps)</span>
+<span id="cb2-125"><a href="#cb2-125"></a>  <span class="kw">return</span>(results)</span>
+<span id="cb2-126"><a href="#cb2-126"></a>} </span></code></pre></div>
+</div>
+<div id="boston-housing-data" class="section level3">
+<h3>Boston Housing Data</h3>
+<p>As the first example, we re-analyzed the Boston housing data described by Harrison and Rubinfeld (1978) and openly accessible in the R package <code>spdep</code>. The data contains 506 observations and 20 variables in total. We removed the variables: <code>TOWN</code>, <code>TOWNNO</code>, <code>TRACT</code>, <code>LON</code> and <code>LAT.</code> The outcome variable is the median value of owner-occupied houses (in USD 1000’s) with <span class="math inline">\(J=13\)</span> candidate predictor variables including, e.g., crime rate, tax rate, pupil teacher ratios. Our target is to select a subset of variables along with their effect types to estimate the value of owner-occupied houses in Boston.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#BOSTON DATA </span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#data prep </span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(spdep)</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">data</span>(boston)</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#X Matrix</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>X_boston &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(<span class="st">&quot;CRIM&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>CRIM,</span>
+<span id="cb3-9"><a href="#cb3-9"></a>                  <span class="st">&quot;ZN&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>ZN,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>                  <span class="st">&quot;INDUS&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>INDUS,</span>
+<span id="cb3-11"><a href="#cb3-11"></a>                  <span class="st">&quot;CHAS&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>CHAS,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>                  <span class="st">&quot;NOX&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>NOX,</span>
+<span id="cb3-13"><a href="#cb3-13"></a>                  <span class="st">&quot;RM&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>RM,</span>
+<span id="cb3-14"><a href="#cb3-14"></a>                  <span class="st">&quot;AGE&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>AGE,</span>
+<span id="cb3-15"><a href="#cb3-15"></a>                  <span class="st">&quot;DIS&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>DIS,</span>
+<span id="cb3-16"><a href="#cb3-16"></a>                  <span class="st">&quot;RAD&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>RAD,</span>
+<span id="cb3-17"><a href="#cb3-17"></a>                  <span class="st">&quot;TAX&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>TAX,</span>
+<span id="cb3-18"><a href="#cb3-18"></a>                  <span class="st">&quot;PTRATIO&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>PTRATIO,</span>
+<span id="cb3-19"><a href="#cb3-19"></a>                  <span class="st">&quot;B&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>B,</span>
+<span id="cb3-20"><a href="#cb3-20"></a>                  <span class="st">&quot;LSTAT&quot;</span> =<span class="st"> </span>boston.c<span class="op">$</span>LSTAT</span>
+<span id="cb3-21"><a href="#cb3-21"></a>))</span>
+<span id="cb3-22"><a href="#cb3-22"></a></span>
+<span id="cb3-23"><a href="#cb3-23"></a></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="co">#Vector of responses </span></span>
+<span id="cb3-25"><a href="#cb3-25"></a>y &lt;-<span class="st"> </span>(boston.c<span class="op">$</span>CMEDV)</span>
+<span id="cb3-26"><a href="#cb3-26"></a></span>
+<span id="cb3-27"><a href="#cb3-27"></a>boston_results &lt;-<span class="st"> </span><span class="kw">bayesian_selection</span>(<span class="dt">data_original =</span> X_boston, <span class="dt">y=</span>y,</span>
+<span id="cb3-28"><a href="#cb3-28"></a>                                     <span class="dt">knots=</span><span class="dv">6</span>, <span class="dt">iteration =</span> <span class="dv">2000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>boston_results[<span class="dv">1</span>];boston_results[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## $`posterior probability_selected`
+## [1] 0.378</code></pre>
+<pre><code>## $`selected model`
+##  [1] 0 0 1 2 2 0 1 1 1 1 1 2</code></pre>
+<p><br />
+</p>
+<ul>
+<li>In the original analysis, certain variables were transformed using logarithmic or squared transformations to fit linear regression models. In this study, all the variables were analyzed in their original form without any transformation. The model <span class="math inline">\(M_{\gamma^{&#39;}} = (1, 0, 0, 1, 2, 2, 0, 1, 1, 1, 1, 1, 2)\)</span> got selected as the true model with a posterior probability of .378. Hence, our recommendation is to exclude the variables <code>ZN</code>, <code>INDUS</code>, and <code>AGE</code> from the model as they appear to have little or no influence on the outcome. Among the included variables, we observed that variables <code>NOX</code>, <code>RM</code>, and <code>LSTAT</code> exhibit nonlinear effects on the outcome variable.</li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="ozone-data" class="section level3">
+<h3>Ozone Data</h3>
+<p>In this example, we explored Los Angeles ozone pollution data analyzed by Breiman and Friedman (1985) and available in the R package “mlbench.” The dataset comprises daily measurements of maximum ozone concentration near Los Angeles and eight meteorological variables (<span class="math inline">\(J=8\)</span>). Our goal is to select a subset of variables and their effect types to estimate the daily ozone concentration in Los Angeles.</p>
+<p>Variables used in the ozone pollution example:</p>
+<ul>
+<li><code>ozone</code>: Daily ozone concentration (maximum 1-hour average, parts per million) at Upland, CA</li>
+<li><code>vh</code>: Vandenburg 500-millibar-pressure height (m)</li>
+<li><code>wind</code>: Wind speed (mph) at Los Angeles International Airport (LAX)</li>
+<li><code>hum</code>: Humidity (%) at LAX</li>
+<li><code>temp</code>: Sandburg Air Force Base temperature (◦F)</li>
+<li><code>ibh</code>: Inversion base height at LAX</li>
+<li><code>ibt</code>: Inversion base temperature at LAX</li>
+<li><code>dpg</code>: Daggett pressure gradient (mmHg) from LAX to Daggett, CA vis Visibility (miles) at LAX</li>
+</ul>
+<p><br />
+</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(mlbench)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">data</span>(Ozone)</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>Ozone &lt;-<span class="st"> </span>Ozone[,<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">9</span>)] <span class="co">#removing the first three variables (month, day, week) and V9 measures the same thing with V8.  </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>y &lt;-<span class="st"> </span>Ozone<span class="op">$</span>V4 <span class="co">#the outcome variable</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>Ozone &lt;-<span class="st"> </span>Ozone[,<span class="op">-</span><span class="dv">1</span>] <span class="co">#removing the outcome variable from the matrix</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>ozone_results &lt;-<span class="st"> </span><span class="kw">bayesian_selection</span>(<span class="dt">data_original =</span> Ozone, <span class="dt">y=</span>y,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>                                    <span class="dt">knots=</span><span class="dv">6</span>, <span class="dt">iteration =</span> <span class="dv">2000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>ozone_results[<span class="dv">1</span>]; ozone_results[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## $`posterior probability_selected`
+## [1] 0.30225</code></pre>
+<pre><code>## $`selected model`
+## [1] 1 0 1 2 1 1 0 0</code></pre>
+<ul>
+<li>Similar to the previous example, no transformations were applied to the data, and we considered the original form of the variables for analysis. The model <span class="math inline">\(M_{\gamma^{&#39;}}= (1, 0, 1, 2, 1, 1, 0, 0)\)</span> got selected as the true model with a posterior probability of .302. Thus, our recommendation is to exclude the variables <code>wind</code>, <code>ibt</code> and <code>vis</code>. Among the variables included in the model, we observed that temperature, <code>temp</code> exhibits a nonlinear effect on the daily ozone concentration.</li>
+</ul>
+<p><br />
+<br />
+</p>
+</div>
+<div id="references" class="section level3">
+<h3>References</h3>
+<ul>
+<li><p>Harrison, D., &amp; Rubinfeld, D. L. 1978. Hedonic housing prices and the demand for clean air. Journal of Environmental Economics and Management, 5(1), 81–102. <a href="https://doi.org/10.1016/0095-0696(78)90006-2" class="uri">https://doi.org/10.1016/0095-0696(78)90006-2</a></p></li>
+<li><p>Liang, F., Paulo, R., Molina, G., Clyde, M. A., &amp; Berger, J. O. (2008). Mixtures of g Priors for Bayesian Variable Selection. Journal of the American Statistical Association, 103(481), 410–423. <a href="https://doi.org/10.1198/016214507000001337" class="uri">https://doi.org/10.1198/016214507000001337</a></p></li>
+</ul>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
