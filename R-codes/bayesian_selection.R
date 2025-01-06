@@ -15,17 +15,16 @@ library(data.table)
 
 #########################################################################################
 
-#MCMC CHAIN FUNCTION
-bayesian_selection <- function(data_original, #matrix of predictor variables 
+bayesian_selection <- function(X, #matrix of predictor variables 
                                y, #the outcome variable
                                knots= 4, #number of knots
                                penalty=knots-2, #adjusted degrees of freedom for each smooth
                                iteration=2000, #burn-in
-                               gamma_prior = c(rep(0, n_var)), #initial gamma values set to zero 
+                               gamma_prior = c(rep(0, dim(X)[2])), #initial gamma values set to zero, alternatively can be set to different initial values
                                prior_p=c(1/3, 1/3, 1/3)) { #initial probabilities for each effect type set to equal probabilities as 1/3. )
   
-  n  = dim(data_original)[1] #sample Size 
-  n_var = dim(data_original)[2] #total number of predictor variables
+  n  = dim(X)[1] #sample Size 
+  n_var = dim(X)[2] #total number of predictor variables
   gamma_update_k <-gamma_prior #initial gamma specification
   gamma_draws <- matrix(NA, nrow= iteration, ncol = n_var) #matrix for gamma draws
   ps<- matrix(NA, nrow = iteration+1, ncol = 3) #matrix for p_draws
@@ -41,7 +40,7 @@ bayesian_selection <- function(data_original, #matrix of predictor variables
   for(s in 1:iteration){
     pb$tick()
     for(k in 1:n_var){
-      data = data_original
+      data = X
       gamma_update_k1 <- gamma_update_k[-c(k)]
       
       a <- data[, k] #the variable of interest 
@@ -141,3 +140,5 @@ bayesian_selection <- function(data_original, #matrix of predictor variables
                   "p draws" = ps)
   return(results)
 } 
+
+

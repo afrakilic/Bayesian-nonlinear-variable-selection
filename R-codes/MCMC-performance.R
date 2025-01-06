@@ -6,7 +6,8 @@
 ######             MCMC MODEL SEARCH METHOD PERFORMANCE SIMULATION                  #####
 #########################################################################################
 
-
+source("R-codes/bayesian_selection.R")
+source("R-codes/utils.R")
 #libraries 
 library(mgcv)
 library(data.table)
@@ -16,159 +17,16 @@ library(progress)
   
 #########################################################################################
 
-#simulation function 
-bayesian_selection<- function(beta = 0.8, n = 100, 
-                              sigma2 = 0.1, n_var = 10, 
-                              knots= 4,
-                              iteration=1000,
-                              gamma_prior = c(rep(0, n_var)),
-                              prior_p=c(1/3, 1/3, 1/3)){
-  
-  #penalty is calculated as max edf - df(lm) for each variable swhere max edf = k-1 and df(lm)=1 
-  penalty=knots-2
-  #Data Generation
-  #independent predictor variables 
-  variables <- matrix(NA, nrow=n, ncol=n_var)
-  colnames(variables) <-c(paste0("x", 1:n_var))
-  for (i in 1:n_var){
-    variables[,i] = rnorm(n)
-  }
-  #outcome variable
-  error <- rnorm(n,sd=sqrt(sigma2)); y=error
-  
-  #randomly selecting the nonlinears and the zero relationships 
-  nonlinear_true <- c("x1", "x2")
-  linear_true <- c("x3", "x4")
-  zero_true <- setdiff(colnames(variables), c(nonlinear_true, linear_true))
-  
-  # relationship definitions and creating the true model
-  #nonlinear effects
-  nonlinear_indices <- match(nonlinear_true, colnames(variables))
-  for(i in 1:length(nonlinear_indices)){y=y+beta*exp(variables[, nonlinear_indices][,i])}
-  
-  #zero effects
-  zero_indices <- match(zero_true, colnames(variables))
-  for(i in 1:length(zero_indices)){y=y+0*variables[,zero_indices][,i]}
-  
-  #linear effects
-  linear_indices<- match(linear_true, colnames(variables))
-  for(i in 1: length(linear_indices)){y=y+beta*variables[,linear_indices][,i]}
-  
-  y = y - mean(y) #not considering the intercept 
-  
-  #true model gamma sequence 
-  true_gamma = c(rep(NA, n_var))
-  true_gamma[nonlinear_indices]=2; true_gamma[zero_indices]=0; true_gamma[linear_indices]=1
-  data_original<- as.data.frame(variables) #transforming the matrix into a dataframe
-  
-  gamma_update_k <-gamma_prior #initial gamma specification
-  gamma_draws <- matrix(NA, nrow= iteration, ncol = n_var) #matrix for gamma draws
-  ps<- matrix(NA, nrow = iteration+1, ncol = 3) #matrix for p_draws
-  
-  pb<-progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
-                       total = iteration,
-                       complete = "=",   # Completion bar character
-                       incomplete = "-", # Incomplete bar character
-                       current = ">",    # Current bar character
-                       clear = FALSE,    # If TRUE, clears the bar when finish
-                       width = 100)      # Width of the progress bar
-  for(s in 1:iteration){
-    pb$tick()
-    for(k in 1:n_var){
-      data = data_original
-      gamma_update_k1 <- gamma_update_k[-c(k)]
-      
-      a <- data[, k] #the variable of interest 
-      data <- data[, -k] #the remaining variables 
-      
-      # for linear effects
-      linears <- c()
-      if(length(gamma_update_k1[gamma_update_k1 == 1]) != 0){
-        
-        for(i in 1:ncol(data[which(gamma_update_k1 == 1)])){
-          linears <- c(linears, paste(c(colnames(data[which(gamma_update_k1 == 1)][i])), collapse= ""))
-        } 
-      }
-      
-      #for nonlinear effects
-      non_linears <- c()
-      if(length(gamma_update_k1[gamma_update_k1 == 2]) != 0) {
-        for(i in 1:ncol(data[which(gamma_update_k1 == 2)])){
-          non_linears <- c(non_linears, paste(c('s(', colnames(data[which(gamma_update_k1 == 2)][i]), ',k=',knots,')'), collapse= ""))
-        } 
-      }
-      
-      vars <- c(linears, non_linears) #vector for non-zero effects to include to the models below
-      
-      #model fitting
-      if(length(vars) != 0){ #remaining variables contain non-zero effect
-        M1 <- gam(as.formula(paste('y', '~', paste(vars, collapse =  "+"))), data = data)
-        M2 <- gam(as.formula(paste('y',  '~', 'a +', paste(vars, collapse =  "+"))), data = data) #1
-        M3 <- gam(as.formula(paste('y',  '~', 's(a, k=',knots, ') +', paste(vars, collapse =  "+"))), data = data) #2
-      } else{ #remaining variables do not contain non-zero effect
-        M1 <- gam(y ~ 1, data = data)
-        M2 <- gam(y ~ a, data = data) #1
-        M3 <- gam(y ~ s(a, k=knots), data = data)
-      }
-      
-      #BIC scores 
-      bic_M1 <- (-2) * head(logLik(M1)) +  attr(logLik(M1), "df")* log(n)
-      bic_M2 <- (-2) * head(logLik(M2)) +  attr(logLik(M2), "df")* log(n)
-      bic_M3 <- (-2) * head(logLik(M3)) +  (attr(logLik(M2), "df") + penalty)* log(n) #penalty depends on the #of knots
-      
-      
-      #Bayes Factors 
-      BF11 <- exp((bic_M1 - bic_M1) /2) #null against the null
-      BF21_ <- exp((bic_M1 - bic_M2) /2) #linear against the null
-      BF31_ <- exp((bic_M1 - bic_M3) /2) #nonlinear against the null 
-      
-      
-      #infinity BFs
-      if(BF21_ == "-Inf"){BF21 = -1e5} else if(BF21_== "Inf") {BF21 = 1e5} else{BF21=BF21_}
-      if(BF31_ == "-Inf"){BF31 = -1e5} else if(BF31_ == "Inf") {BF31 = 1e5} else{BF31=BF31_}
-      
-      #Posterior Probabilities
-      zero <- (prior_p[1] * BF11) / sum(prior_p[1] * BF11, prior_p[2]*BF21, prior_p[3]* BF31)
-      one <- (prior_p[2] * BF21) / sum(prior_p[1] * BF11, prior_p[2]*BF21, prior_p[3]* BF31)
-      two <- (prior_p[3] * BF31) / sum(prior_p[1] * BF11, prior_p[2]*BF21, prior_p[3]* BF31)
-      
-      
-      
-      #sampling the effect type of the variable of interest 
-      gamma_update_k[k] <- sample(c(0,1,2), size=1, prob = c(zero, one, two)) 
-    }
-    
-    #multiplicity correction for the next chain 
-    prior_p <- rdirichlet(1, c(1+length(gamma_update_k[which(gamma_update_k == 0)]), #alpha1 = 1
-                               1+length(gamma_update_k[which(gamma_update_k == 1)]),  #alpha2 = 1
-                               1+length(gamma_update_k[which(gamma_update_k == 2)])))
-    ps[s+1, ] <- prior_p
-    gamma_draws[s,] <- gamma_update_k
-  }
-  #posterior probability calculation of the true model 
-  posterior <- data.table(gamma_draws)
-  frequency <- as.matrix(posterior[,list(posterior=.N),by=names(posterior)][order(posterior,decreasing=T)])
-  t=apply(frequency[,-(n_var+1)], 1, function(x) return(all(x == true_gamma))) #checking any true model among the draws
-  pp_t<- if (any(t)==FALSE) 0 else as.numeric(frequency[which(t),(n_var+1)])/iteration ##posterior prob calculation of the true
-  pp_s <- as.numeric(frequency[1,(n_var+1)])/iteration ##posterior prob calculation of the selected
-  results <- list("is true" = if(identical(as.vector(frequency[1,1:n_var]),true_gamma) == TRUE) 1 else 0,
-                  "posterior probability_true" = pp_t,
-                  "posterior probability_selected" = pp_s,
-                  "selected model" = as.vector(frequency[1,1:n_var]),
-                  "true model" = true_gamma,
-                  "gamma draws" = gamma_draws,
-                  "p draws" = ps)
-  return(results)
-}
-
-
 
 #########################################################################################
 
 # CONVERGENCE OF GIBSS SAMPLER CHAIN 
 
 #J=6
-chain_6 <- bayesian_selection_m(iteration = 10000, n_var = 6) #fit
+
+data <- generate_true_model(n_var = 6)
+chain_6 <- bayesian_selection(X = data$data, y= data$response, iteration = 10000) #fit
+
 
 chain_6_pp <- c(rep(NA, 100))#matrix to store the posterior probabilities at every 100 iteration
 for (i in 1:100){
@@ -176,7 +34,7 @@ for (i in 1:100){
   posterior <- data.table(gamma_draws[1:(i*100),])
   frequency <- as.matrix(posterior[,list(posterior=.N),by=names(posterior)][order(posterior,decreasing=T)])
   pp_s <- as.numeric(frequency[1,(6+1)])/(i*100) ##posterior prob calculation of the selected
-  chain_6_pp[i] = pp_s
+  chain_6_pp[i] =  as.numeric(frequency[1,(6+1)])/(i*100)
 }
 
 #plot
@@ -185,7 +43,8 @@ plot(c(100*c(1:100)), chain_6_pp, type="l", ylim=c(0, 1),
 
 ######################################################################################################
 #J=20
-chain_20 <- bayesian_selection_m(iteration = 10000, n_var = 20) #fit
+data <- generate_true_model(n_var = 20)
+chain_20 <- bayesian_selection(X = data$data, y= data$response, iteration = 10000) #fit
 
 chain_20_pp <- c(rep(NA, 100))#matrix to store the posterior probabilities at every 100 iteration
 for (i in 1:100){
