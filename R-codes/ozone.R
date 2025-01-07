@@ -6,7 +6,7 @@
 ######                                OZONE DATA                                   #####
 #########################################################################################
 
-source("bayesian_selection.R")  # Ensure the script is in the working directory
+source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
 
 #OZONE DATA 
 library(mlbench)

@@ -61,11 +61,11 @@ test_input <- X_boston[-train_indices, -ncol(X_boston)]  # Input variables for t
 test_output <- X_boston[-train_indices, ncol(X_boston)]  # Output variable for testing
 
 # Training
-boston_results <- bayesian_selection(data_original = train_input, y=train_output, knots=6, iteration = 2000)
+boston_results <- bayesian_selection(X = train_input, y=train_output, knots=6, iteration = 2000)
 
 boston_results$`selected model`
 
-bostonn <- boston_results
+boston_91 <- boston_results
 
 # Prediction
 #########################################################################################

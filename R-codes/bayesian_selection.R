@@ -19,7 +19,7 @@ bayesian_selection <- function(X, #matrix of predictor variables
                                y, #the outcome variable
                                knots= 4, #number of knots
                                penalty=knots-2, #adjusted degrees of freedom for each smooth
-                               iteration=2000, #burn-in
+                               iteration=10, #burn-in
                                gamma_prior = c(rep(0, dim(X)[2])), #initial gamma values set to zero, alternatively can be set to different initial values
                                prior_p=c(1/3, 1/3, 1/3)) { #initial probabilities for each effect type set to equal probabilities as 1/3. )
   
