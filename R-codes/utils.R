@@ -40,7 +40,7 @@ generate_true_model <- function(beta = 0.8,
   linear_true <- c("x3", "x4")   # Variables with linear effects
   zero_true <- setdiff(colnames(variables), c(nonlinear_true, linear_true)) # No effect variables
   
-  # nonlinear effects (e.g., exponential transformations)
+  # nonlinear effects 
   nonlinear_indices <- match(nonlinear_true, colnames(variables))
   for (i in seq_along(nonlinear_indices)) {
     y <- y + beta * exp(variables[, nonlinear_indices[i]])
@@ -117,4 +117,25 @@ calculate_posterior_probability <- function(gamma_draws, true_gamma) {
   return(result)
 }
 
+
 #########################################################################################
+######            FUNCTION: running simulation for different models                 #####
+#########################################################################################
+
+
+run_bayesian_selection <- function(beta = 0.8, sample_size = 100, n_var = 10, trials = 10, knots = 4) {
+  results <- matrix(NA, nrow = trials, ncol = 3)  # Pre-allocate matrix for results
+  
+  for (i in 1:trials) {
+    
+    data <- generate_true_model(beta = beta, n = sample_size, n_var = n_var) 
+    model <- bayesian_selection(X = data$data, y = data$response, knots = knots)
+    a = calculate_posterior_probability(model$`gamma draws`, data$true_model)
+    # Store results for each trial
+    results[i, ] <- c(a$`Is selected model the true model`, a$posterior_prob_true_model, a$posterior_prob_selected_model)
+  }
+  
+  return(results)
+}
+
+
