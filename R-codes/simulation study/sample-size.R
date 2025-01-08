@@ -1,14 +1,29 @@
+#### Title: Bayesian Variable Selection for linear and Nonlinear Model
+#### Author: Afra Kilic
+#### Created: August, 2023
+
+#########################################################################################
+######             MCMC MODEL SEARCH METHOD PERFORMANCE SIMULATION                  #####
+#########################################################################################
+
+source("R-codes/bayesian_selection.R")
+source("R-codes/utils.R")
+
+# libraries 
+library(mgcv)  # For generalized additive models
+library(data.table)
+
+#########################################################################################
+
+#STATISTICAL BEHAVIOR ACROSS SAMPLE SIZE 
 
 
-
-
-# Define parameters
+# Parameters
 sample_sizes <- c(50, 100, 250, 500)  # List of sample sizes
 beta_values <- c(0.5, 2)  # List of beta values
 
-# Initialize an empty list to store results
 results_n <- list()
-max_retries <- 10  # Set maximum retries for failed operations
+max_retries <- 10  # Set maximum retries for failed operations due to the convergence of gam. 
 
 # Loop over sample sizes and beta values
 for (n in sample_sizes) {
@@ -45,6 +60,7 @@ for (n in sample_sizes) {
     }
   }
 }
+
 
 # Define trials
 trials <- 10

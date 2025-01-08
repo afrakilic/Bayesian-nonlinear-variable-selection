@@ -1,6 +1,21 @@
-######################################################################################################
-#NUMBER OF BASIS FUNCTIONS (k)
-######################################################################################################
+#### Title: Bayesian Variable Selection for linear and Nonlinear Model
+#### Author: Afra Kilic
+#### Created: August, 2023
+
+#########################################################################################
+######             MCMC MODEL SEARCH METHOD PERFORMANCE SIMULATION                  #####
+#########################################################################################
+
+source("R-codes/bayesian_selection.R")
+source("R-codes/utils.R")
+
+# libraries 
+library(mgcv)  # For generalized additive models
+library(data.table)
+
+#########################################################################################
+
+# STATISTICAL BEHAVIOR ACROSS NUMBER OF BASIS FUNCTION USED IN MODEL TRAINING
 
 knots_values <- c(4, 6, 8, 10, 12)
 

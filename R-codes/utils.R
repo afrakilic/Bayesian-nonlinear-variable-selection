@@ -6,12 +6,9 @@
 ######                            HELPER FUNCTIONS                                  #####
 #########################################################################################
 
-# Load necessary libraries
-library(mgcv)          # For generalized additive models
-library(data.table)    # Efficient data manipulation
-library(MCMCprecision) # Precision for Bayesian MCMC
-library(lubridate)     # Date-time operations
-library(progress)      # Progress bar for iterative processes
+# Libraries
+library(mgcv)# For generalized additive models
+library(data.table)    
 
 #########################################################################################
 ######                  FUNCTION: generate_true_model                               #####
@@ -98,6 +95,7 @@ calculate_posterior_probability <- function(gamma_draws, true_gamma) {
   )
   
   selected_model = as.vector(frequency[1,1:n_var])
+  
   # Check if the true gamma sequence appears among the draws
   t <- apply(frequency[, -(n_var + 1)], 1, function(x) return(all(x == true_gamma)))
   

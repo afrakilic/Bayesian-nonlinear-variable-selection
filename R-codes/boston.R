@@ -35,9 +35,9 @@ X_boston <- as.data.frame(cbind(
 y_boston <- boston.c$CMEDV
 
 # Quadratic terms
-for (i in 1:ncol(X_boston)) {
-  X_boston[[paste0("V", i, "_quadratic")]] <- X_boston[[i]]^2
-}
+#for (i in 1:ncol(X_boston)) {
+#  X_boston[[paste0("V", i, "_quadratic")]] <- X_boston[[i]]^2
+#}
 
 # Interaction terms
 variable_names <- colnames(X_boston[, 1:13])

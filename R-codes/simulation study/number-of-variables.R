@@ -1,57 +1,100 @@
+#### Title: Bayesian Variable Selection for Linear and Nonlinear Models
+#### Author: Afra Kilic
+#### Created: August, 2023
 
-######################################################################################################
-#NUMBER OF VARIABLES (J)
-######################################################################################################
+#########################################################################################
+######             MCMC MODEL SEARCH METHOD PERFORMANCE SIMULATION                  #####
+#########################################################################################
 
+source("R-codes/bayesian_selection.R")
+source("R-codes/utils.R")
 
-n_var_values <- c(6, 10, 15, 20, 30)
+# Libraries
+library(mgcv)  # For generalized additive models
+library(data.table)
 
-results_n_var <- list()
+#########################################################################################
 
-# Run Bayesian selection for each n_var value
-for (n_var in n_var_values) {
-  # Create a unique name for each n_var value
-  key <- paste0("J", n_var)
+# Function to run Bayesian selection and collect results for a given n_var value
+run_bayesian_for_n_var <- function(n_var, trials = 100) {
+  results <- matrix(NA, nrow = trials, ncol = 3)  # Pre-allocate matrix for results
+  times <- numeric(trials)  # To store CPU times for each trial
+  selected_model <- matrix(NA, nrow = trials, ncol = n_var)  # Pre-allocate matrix
   
-  # Store results in the list
-  results_n_var[[key]] <- run_bayesian_selection( n_var = n_var)
-}
-
-######################################################################################################
-#proportion of correct selection & posterior probability of the true model
-J <- cbind(c(length(mj6[,1][mj6[,1]==1]), length(mj10[,1][mj10[,1]==1]),
-             length(mj15[,1][mj15[,1]==1]),length(mj20[,1][mj20[,1]==1]),
-             length(mj30[,1][mj30[,1]==1])), #proportion of correct selection
-           
-           c(mean(mj6[,2]), mean(mj10[,2]), mean(mj15[,2]), mean(mj20[,2]), mean(mj30[,2])),#posterior prob
-           
-           c(mj6_CPU, mj10_CPU, mj15_CPU, mj20_CPU, mj30_CPU)/mj10_CPU) #CPU  
-
-colnames(J) = c("Correct Selection Proportion", "Posterior Pr. of the true model", "CPU")
-rownames(J) = c("J=6", "J=10", "J=15", "J=20", "J=30")
-
-J
-
-######################################################################################################
-multiplicity <- matrix(NA, ncol = 3, nrow = 5)
-mj_results <- list(mj6, mj10, mj15, mj20, mj30)
-for (i in 1:5){
-  no_var <- matrix(NA, nrow = 100, ncol = 3)
-  for (j in 1:100){
-    result <- mj_results[[i]]
-    no_var[j,] <- c(length(result[j,-c(1:3)][result[j,-c(1:3)]==1]), 
-                    length(result[j,-c(1:3)][result[j,-c(1:3)]==2]),
-                    length(result[j,-c(1:3)][result[j,-c(1:3)]==0]))
+  for (i in seq_len(trials)) {
+    # Start the timer
+    start <- proc.time()
+    
+    # Generate data and apply Bayesian selection
+    data <- generate_true_model(n_var = n_var)
+    model <- bayesian_selection(X = data$data, y = data$response)
+    
+    # Compute posterior probabilities
+    posterior <- calculate_posterior_probability(model$`gamma draws`, data$true_model)
+    results[i, ] <- c(
+      posterior$`Is selected model the true model`,
+      posterior$posterior_prob_true_model,
+      posterior$posterior_prob_selected_model
+    )
+    selected_model[i, ] <- model$`selected model`
+    
+    # Record elapsed time
+    times[i] <- proc.time()["elapsed"] - start["elapsed"]
   }
-  multiplicity[i,] <- colMeans(no_var)
+  
+  # Return results, models, and timings
+  list(results = results, gammas = selected_model, times = times)
 }
 
+# Define n_vars and run simulations
+n_vars <- c(6, 10, 15, 20, 30)
+results_list <- lapply(n_vars, run_bayesian_for_n_var)
 
-#plot
-plot(c(6, 10, 15, 20, 30), multiplicity[,1], type = "o", col = "darkblue",  ylim = c(0,27),#gamma=1
-     main="Number of identified effect types across J", xlab="J", ylab="number of identified effect type") 
-lines(c(6, 10, 15, 20, 30), multiplicity[,2], type = "o") #gamma=2
-lines(c(6, 10, 15, 20, 30), multiplicity[,3], type = "s", lty = 2, pch = 15) #gamma=0
-points(c(6, 10, 15, 20, 30), multiplicity[,3], pch = 18) #point for gamma=0
-legend(5, 28, legend=c(expression(paste(gamma, "=1")), expression(paste(gamma, "=2")), expression(paste(gamma, "=0"))),
-       col = c("darkblue", "black", "black"), lty=c(1,1,2), cex=1 )
+# Extract results, CPU times, and gamma draws
+results <- lapply(results_list, `[[`, "results")
+cpu_times <- sapply(results_list, function(x) mean(x$times))
+gamma_draws <- lapply(results_list, `[[`, "gammas")
+
+# Compute summary table (J)
+J <- do.call(cbind, lapply(results, function(res) {
+  correct_selection <- mean(res[, 1])  # Proportion of correct selections
+  posterior_prob <- mean(res[, 2])     # Mean posterior probability of the true model
+  c(correct_selection, posterior_prob)
+}))
+
+# Add CPU time ratios to J
+cpu_ratio <- cpu_times / cpu_times[2]
+J <- rbind(J, cpu_ratio)
+rownames(J) <- c("Correct Selection Proportion", "Posterior Pr. of the True Model", "CPU")
+colnames(J) <- paste0("J=", n_vars)
+
+# Display results
+print(J)
+
+#########################################################################################
+
+# MULTIPLICITY CHECK
+
+# Function to compute row-wise counts for 0, 1, and 2
+count_values <- function(mat) {
+  t(apply(mat, 1, function(row) tabulate(factor(row, levels = 0:2), nbins = 3)))
+}
+
+# Compute multiplicity
+multiplicity <- do.call(rbind, lapply(gamma_draws, function(gammas) {
+  colMeans(count_values(gammas))
+}))
+rownames(multiplicity) <- paste0("J=", n_vars)
+
+# Display multiplicity results
+print(multiplicity)
+
+# Plot results
+plot(n_vars, multiplicity[, 3], type = "o", col = "darkblue", ylim = c(0, max(multiplicity)),
+     main = "Number of Identified Effect Types Across J", xlab = "J", ylab = "Number of Identified Effect Type")
+lines(n_vars, multiplicity[, 2], type = "o", col = "black")
+lines(n_vars, multiplicity[, 1], type = "s", col = "black", lty = 2)
+points(n_vars, multiplicity[, 1], pch = 18)
+legend("topright", legend = c(expression(paste(gamma, "=1")), expression(paste(gamma, "=2")), expression(paste(gamma, "=0"))),
+       col = c("darkblue", "black", "black"), lty = c(1, 1, 2), pch = c(NA, NA, 18), cex = 0.8)
+
