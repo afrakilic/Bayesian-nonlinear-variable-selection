@@ -15,7 +15,7 @@ library(data.table)
 
 #########################################################################################
 
-# CONVERGENCE OF GIBSS SAMPLER CHAIN 
+# CONVERGENCE OF GIBSS SAMPLER CHAIN #
 
 compute_convergence <- function(n_var) {
   data <- generate_true_model(n_var = n_var)
