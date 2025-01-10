@@ -3,65 +3,40 @@
 #### Created: August, 2023
 
 #########################################################################################
-######                                OZONE DATA                                   #####
+######                             DIABETIES DATA                                   #####
 #########################################################################################
 
 source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
 
-#OZONE DATA 
-library(mlbench)
-data(Ozone)
+data(diabetesI, package = "spikeslab")
 
-# Prepare the data
-Ozone <- Ozone[, -c(1, 2, 3, 9)]
-Ozone <- apply(Ozone, 2, function(x) {
-  ifelse(is.na(x), mean(x, na.rm = TRUE), x)
-})
-Ozone <- as.data.frame(Ozone)
-# Remove specified columns
-y <- Ozone$V4               # Extract outcome variable
-Ozone <- Ozone[, -1]              # Remove the outcome variable
-
-# Rename columns sequentially as Variable1, Variable2, ...
-colnames(Ozone) <- paste0("Variable", 1:ncol(Ozone))
-
- #Square terms
-for (i in 1:ncol(Ozone)) {
-  Ozone[[paste0("V", i, "_square")]] <- Ozone[[i]]^2
-}
-
-# Interaction terms
-variable_names <- colnames(Ozone[, 1:8])
-for (i in 1:(8 - 1)) {
-  for (j in (i + 1):8) {
-    Ozone[[paste0(variable_names[i], "_x_", variable_names[j])]] <- Ozone[[i]] * Ozone[[j]]
-  }
-}
+y <- diabetesI$Y #the outcome
+Diabeties <- diabetesI[, -1] # removing the outcome 
 
 # Combine input and output
-Ozone$Outcome <- y
+Diabeties$Outcome <- y
 
 # Split into train (75%) and test (25%)
 set.seed(42)  # For reproducibility
-train_indices <- sample(1:nrow(Ozone), size = 0.75 * nrow(Ozone))
+train_indices <- sample(1:nrow(Diabeties), size = 0.75 * nrow(Diabeties))
 
 # Separate training and testing data
-train_input <- Ozone[train_indices, -ncol(Ozone)]  # Input variables for training
-train_output <- Ozone[train_indices, ncol(Ozone)] # Output variable for training
-test_input <- Ozone[-train_indices, -ncol(Ozone)]  # Input variables for testing
-test_output <- Ozone[-train_indices, ncol(Ozone)] # Output variable for testing
-
+train_input <- Diabeties[train_indices, -ncol(Diabeties)]  # Input variables for training
+train_output <- Diabeties[train_indices, ncol(Diabeties)] # Output variable for training
+test_input <- Diabeties[-train_indices, -ncol(Diabeties)]  # Input variables for testing
+test_output <- Diabeties[-train_indices, ncol(Diabeties)] # Output variable for testing
 
 # Training
-ozone_results <- bayesian_selection(X = train_input, knots = 8, y= train_output, iteration = 2000)
+diabetes_results <- bayesian_selection(X = train_input, knots = 8, y= train_output, iteration = 2000)
 
-ozone_results$`selected model`
-ozone_results$`posterior probability_selected`
+
+diabetes_results$`selected model`
+diabetes_results$`posterior probability_selected`
 
 # Model Training with the Selected Model 
 
 knots = 8
-selected_model <- ozone_results$`selected model`
+selected_model <- diabetes_results$`selected model`
 data = train_input
 # for linear effects
 linears <- c()
@@ -131,7 +106,6 @@ rmse_test <- sqrt(mean((test_output - pred_test)^2))
 print(paste("RMSE:", rmse_test))
 
 
-
 #LASSO 
 x = as.matrix(train_input)
 y = train_output
@@ -146,3 +120,6 @@ final_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 predictions <- predict(final_model, s = best_lambda, newx = as.matrix(test_input))
 rmse_test_lasso <- sqrt(mean((test_output - predictions)^2))
 rmse_test_lasso
+
+
+

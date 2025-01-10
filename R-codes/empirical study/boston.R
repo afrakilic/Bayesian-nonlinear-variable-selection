@@ -61,13 +61,71 @@ test_input <- X_boston[-train_indices, -ncol(X_boston)]  # Input variables for t
 test_output <- X_boston[-train_indices, ncol(X_boston)]  # Output variable for testing
 
 # Training
-boston_results <- bayesian_selection(X = train_input, y=train_output, knots=6, iteration = 2000)
+boston_results <- bayesian_selection(X = train_input, y=train_output, knots=8, iteration = 2000)
 
-boston_results$`selected model`
+selected_model <- boston_results$`selected model`
 
 boston_91 <- boston_results
 
-# Prediction
-#########################################################################################
+# Model Training with the Selected Model 
 
+knots = 8
+selected_model <- boston_91$`selected model`
+data = train_input
+# for linear effects
+linears <- c()
+if(length(selected_model[selected_model == 1]) != 0){
+  
+  for(i in 1:ncol(data[which(selected_model == 1)])){
+    linears <- c(linears, paste(c(colnames(data[which(selected_model == 1)][i])), collapse= ""))
+  } 
+}
+
+#for nonlinear effects
+non_linears <- c()
+if(length(selected_model[selected_model == 2]) != 0) {
+  for(i in 1:ncol(data[which(selected_model == 2)])){
+    non_linears <- c(non_linears, paste(c('s(', colnames(data[which(selected_model == 2)][i]), ',k=',knots,')'), collapse= ""))
+  } 
+}
+
+
+vars <- c(linears, non_linears)
+y <- train_output 
+
+model = gam(as.formula(paste('y', '~ 1 + ', paste(vars, collapse =  "+"))), data = data)
+preds = predict(model, data)
+# Combine predictions and actual values into a dataframe for easy plotting
+results <- data.frame(
+  Real_Output = y,
+  Predicted_Output = preds
+)
+
+# Create a scatter plot to compare predictions vs real output
+ggplot(results, aes(x = Real_Output, y = Predicted_Output)) +
+  geom_point(color = "blue", alpha = 0.6) + # Scatter points
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") + # Line y=x
+  labs(
+    title = "Predictions vs Real Output",
+    x = "Real Output (y)",
+    y = "Predicted Output"
+  ) +
+  theme_minimal()
+
+# Calculate RMSE
+rmse_train <- sqrt(mean((y - preds)^2))
+print(paste("RMSE:", rmse_train))
+
+# Prediction 
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
 

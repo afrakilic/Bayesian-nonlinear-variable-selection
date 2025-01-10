@@ -19,6 +19,7 @@ bayesian_selection <- function(X, #matrix of predictor variables
                                y, #the outcome variable
                                knots= 4, #number of knots
                                penalty=knots-2, #adjusted degrees of freedom for each smooth
+                               fam = "gaussian()", 
                                iteration=1000, #burn-in
                                gamma_prior = c(rep(0, dim(X)[2])), #initial gamma values set to zero, alternatively can be set to different initial values
                                prior_p=c(1/3, 1/3, 1/3)) { #initial probabilities for each effect type set to equal probabilities as 1/3. )
@@ -88,13 +89,13 @@ bayesian_selection <- function(X, #matrix of predictor variables
       } else { #if the variable of interest (a) is a continuous variable
         
         if(length(vars) != 0){ #remaining variables contain non-zero effect
-          M1 <- gam(as.formula(paste('y', '~ 1 +', paste(vars, collapse =  "+"))), data = data)
+          M1 <- gam(as.formula(paste('y', '~ 1 +', paste(vars, collapse =  "+"))),data = data)
           M2 <- gam(as.formula(paste('y',  '~', '1 + a +', paste(vars, collapse =  "+"))), data = data) #1
-          M3 <- gam(as.formula(paste('y',  '~', '1 + s(a, k=',knots, ') +', paste(vars, collapse =  "+"))), data = data) #2
+          M3 <- gam(as.formula(paste('y',  '~', '1 + s(a, k=',knots, ') +', paste(vars, collapse =  "+"))),  data = data) #2
         } else{ #remaining variables do not contain non-zero effect
           M1 <- gam(y ~ 1, data = data)
           M2 <- gam(y ~ 1 + a, data = data) #1
-          M3 <- gam(y ~ 1 + s(a, k=knots), data = data)
+          M3 <- gam(y ~ 1 + s(a, k=knots),  data = data)
         }
         
         #BIC scores 
