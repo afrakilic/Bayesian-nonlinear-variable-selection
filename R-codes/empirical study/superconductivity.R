@@ -1,40 +1,13 @@
 
-#### Title: Bayesian Variable Selection for linear and Nonlinear Model
-#### Author: Afra Kilic
-#### Created: August, 2023
 
-#########################################################################################
-######                         BOSTON HOUSING DATA                                 #####
-#########################################################################################
+# Import CSV file
+data <- read.csv("/Users/hakilic/Downloads/superconductivty+data (1)/train.csv", header = TRUE)
 
-
-source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
-
-# Data preparation
-library(spdep)
-data(boston)
-
-# Prepare X matrix and response vector
-X <- as.data.frame(boston.c[, c("CRIM", "ZN", "INDUS", "CHAS", "NOX", 
-                                       "RM", "AGE", "DIS", "RAD", "TAX", 
-                                       "PTRATIO", "B", "LSTAT")])
-y <- boston.c$CMEDV
-
-# Quadratic terms
-#for (i in 1:ncol(X)) {
-#  X[[paste0("V", i, "_quadratic")]] <- X[[i]]^2
-#}
-
-# Interaction terms
-variable_names <- colnames(X[, 1:13])
-for (i in 1:(13 - 1)) {
-  for (j in (i + 1):13) {
-    X[[paste0(variable_names[i], "_x_", variable_names[j])]] <- X[[i]] * X[[j]]
-  }
-}
-
+y <- data$critical_temp
+X <- data[, -length(data)]
 # Combine input and output
 X$Outcome <- y
+
 
 # Data Split
 set.seed(42)  
@@ -143,17 +116,4 @@ predictions <- predict(final_model, s = best_lambda, newx = as.matrix(test_input
 rmse_test_lasso <- sqrt(mean((test_output - predictions)^2))
 rmse_test_lasso
 
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
