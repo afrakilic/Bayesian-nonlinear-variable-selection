@@ -10,11 +10,22 @@
 library(mgcv)# For generalized additive models
 library(data.table)    
 
+# This script implements a simulation framework for Bayesian variable selection in linear 
+# and nonlinear models. The goal is to identify which predictor variables have linear, 
+# nonlinear, or no effect on the response variable by using Bayesian methods. The script 
+# contains helper functions for generating synthetic data, calculating posterior probabilities, 
+# and running simulations.
+
+
 #########################################################################################
 ######                  FUNCTION: generate_true_model                               #####
 #########################################################################################
 
 # Function to simulate the true model for Bayesian variable selection
+# This function generates synthetic data with a mix of linear, nonlinear, and zero-effect 
+# predictors. It also creates the true model structure, which is later used for comparison 
+# during Bayesian inference.
+
 generate_true_model <- function(beta = 0.8, 
                                 n = 100,    # Sample size
                                 sigma2 = 0.1, # Variance of the error term
@@ -80,7 +91,10 @@ generate_true_model <- function(beta = 0.8,
 ######            FUNCTION: calculate_posterior_probability                        #####
 #########################################################################################
 
-# Function to calculate posterior probabilities of the true and selected models
+# Function to calculate posterior probabilities of the true model and the most frequent model
+# This function evaluates how well the Bayesian variable selection approach identifies the 
+# true model structure by comparing posterior probabilities.
+
 calculate_posterior_probability <- function(gamma_draws, true_gamma) {
   # Dimensions of the gamma draws matrix
   iteration <- dim(gamma_draws)[1] # Number of iterations
@@ -120,6 +134,9 @@ calculate_posterior_probability <- function(gamma_draws, true_gamma) {
 ######            FUNCTION: running simulation for different models                 #####
 #########################################################################################
 
+# Function to run multiple trials of Bayesian variable selection
+# This function repeatedly generates data, applies Bayesian selection, and evaluates
+# the posterior probabilities of the true and selected models.
 
 run_bayesian_selection <- function(beta = 0.8, sample_size = 100, n_var = 10, trials = 10, knots = 4) {
   results <- matrix(NA, nrow = trials, ncol = 3)  # Pre-allocate matrix for results

@@ -53,7 +53,7 @@ for (beta in beta_values) {
 #Define trials 
 trials <- 10
 
-# Generalized function to compute statistics for given beta and column index
+#  Statistics for given beta and column index
 compute_stats <- function(sample_size, col_idx, stat_func = mean) {
   sapply(beta_values, function(beta) {
     key <- paste0("beta", beta, "_n_", sample_size)
