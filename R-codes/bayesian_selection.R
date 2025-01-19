@@ -1,4 +1,5 @@
 
+
 #### Title: Bayesian Variable Selection for linear and Nonlinear Model
 #### Author: Afra Kilic
 #### Created: August, 2023
@@ -141,5 +142,3 @@ bayesian_selection <- function(X, #matrix of predictor variables
                   "p draws" = ps)
   return(results)
 } 
-
-

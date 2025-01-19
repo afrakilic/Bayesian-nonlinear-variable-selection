@@ -7,7 +7,7 @@
 #########################################################################################
 
 source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
-
+source("R-codes/bayesian_selection_large.R")
 #OZONE DATA 
 library(mlbench)
 data(Ozone)
@@ -53,7 +53,7 @@ test_output <- Ozone[-train_indices, ncol(Ozone)] # Output variable for testing
 
 
 # Training
-ozone_results <- bayesian_selection(X = train_input, knots = 8, y= train_output, iteration = 2000)
+ozone_results <- bayesian_selection_large(X = train_input, knots = 8, y= train_output, iteration = 2000)
 
 ozone_results$`selected model`
 ozone_results$`posterior probability_selected`

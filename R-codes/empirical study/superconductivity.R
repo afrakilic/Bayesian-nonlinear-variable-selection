@@ -1,6 +1,7 @@
 
 
 # Import CSV file
+source("R-codes/bayesian_selection_large.R")  
 data <- read.csv("/Users/hakilic/Downloads/superconductivty+data (1)/train.csv", header = TRUE)
 
 y <- data$critical_temp
@@ -11,7 +12,7 @@ X$Outcome <- y
 
 # Data Split
 set.seed(42)  
-train_indices <- sample(1:nrow(X), size = 0.75 * nrow(X))
+train_indices <- sample(1:nrow(X), size = 0.25 * nrow(X))
 
 # training and testing
 train_input <- X[train_indices, -ncol(X)]  # Input variables for training
@@ -20,11 +21,10 @@ test_input <- X[-train_indices, -ncol(X)]  # Input variables for testing
 test_output <- X[-train_indices, ncol(X)]  # Output variable for testing
 
 # Training
-boston_results <- bayesian_selection(X = train_input, y=train_output, knots=8, iteration = 2000)
+superconductivity_results <- bayesian_selection(X = train_input, y=train_output, knots=6, iteration = 2000)
 
-selected_model <- boston_results$`selected model`
+selected_model <- superconductivity_results$`selected model`
 
-boston_91 <- boston_results
 
 # Model Training with the Selected Model 
 
