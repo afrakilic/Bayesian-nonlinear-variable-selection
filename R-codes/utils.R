@@ -138,7 +138,7 @@ calculate_posterior_probability <- function(gamma_draws, true_gamma) {
 # This function repeatedly generates data, applies Bayesian selection, and evaluates
 # the posterior probabilities of the true and selected models.
 
-run_bayesian_selection <- function(beta = 0.8, sample_size = 100, n_var = 10, trials = 10, knots = 4) {
+run_bayesian_selection <- function(beta = 0.8, sample_size = 100, n_var = 10, trials = 100, knots = 4) {
   results <- matrix(NA, nrow = trials, ncol = 3)  # Pre-allocate matrix for results
   
   for (i in 1:trials) {

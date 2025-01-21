@@ -9,20 +9,33 @@
 
 
 source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
-
+library(glmnet)
 # Data preparation
-library(spdep)
-data(boston)
+data(boston, package = "spdep")
 
-# Prepare X matrix and response vector
-X <- as.data.frame(boston.c[, c("CRIM", "ZN", "INDUS", "CHAS", "NOX", 
-                                       "RM", "AGE", "DIS", "RAD", "TAX", 
-                                       "PTRATIO", "B", "LSTAT")])
+# X Matrix
+X <- as.data.frame(cbind(
+  "CRIM" = boston.c$CRIM,
+  "ZN" = boston.c$ZN,
+  "INDUS" = boston.c$INDUS,
+  "CHAS" = boston.c$CHAS,
+  "NOX" = boston.c$NOX,
+  "RM" = boston.c$RM,
+  "AGE" = boston.c$AGE,
+  "DIS" = boston.c$DIS,
+  "RAD" = boston.c$RAD,
+  "TAX" = boston.c$TAX,
+  "PTRATIO" = boston.c$PTRATIO,
+  "B" = boston.c$B,
+  "LSTAT" = boston.c$LSTAT
+))
+
+# Vector of responses
 y <- boston.c$CMEDV
-
-# Quadratic terms
+y <- y - mean(y)
+#Quadratic terms
 #for (i in 1:ncol(X)) {
-#  X[[paste0("V", i, "_quadratic")]] <- X[[i]]^2
+ # X[[paste0("V", i, "_quadratic")]] <- X[[i]]^2
 #}
 
 # Interaction terms
@@ -55,56 +68,16 @@ boston_91 <- boston_results
 
 # Model Training with the Selected Model 
 
-knots = 8
-selected_model <- boston_91$`selected model`
-data = train_input
-# for linear effects
-linears <- c()
-if(length(selected_model[selected_model == 1]) != 0){
-  
-  for(i in 1:ncol(data[which(selected_model == 1)])){
-    linears <- c(linears, paste(c(colnames(data[which(selected_model == 1)][i])), collapse= ""))
-  } 
-}
-
-#for nonlinear effects
-non_linears <- c()
-if(length(selected_model[selected_model == 2]) != 0) {
-  for(i in 1:ncol(data[which(selected_model == 2)])){
-    non_linears <- c(non_linears, paste(c('s(', colnames(data[which(selected_model == 2)][i]), ',k=',knots,')'), collapse= ""))
-  } 
-}
-
-
-vars <- c(linears, non_linears)
-y <- train_output 
-
-model = gam(as.formula(paste('y', '~ 1 + ', paste(vars, collapse =  "+"))), data = data)
-preds = predict(model, data)
-# Combine predictions and actual values into a dataframe for easy plotting
-results <- data.frame(
-  Real_Output = y,
-  Predicted_Output = preds
+results <- selected_model_train(
+  data = train_input,
+  output = train_output,
+  selected_model = selected_model,
+  knots = 8,
+  plot_title = "Training Predictions vs Real Output"
 )
 
-# Create a scatter plot to compare predictions vs real output
-ggplot(results, aes(x = Real_Output, y = Predicted_Output)) +
-  geom_point(color = "blue", alpha = 0.6) + # Scatter points
-  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") + # Line y=x
-  labs(
-    title = "Predictions vs Real Output",
-    x = "Real Output (y)",
-    y = "Predicted Output"
-  ) +
-  theme_minimal()
-
-# Calculate RMSE
-rmse_train <- sqrt(mean((y - preds)^2))
-print(paste("RMSE:", rmse_train))
-
 # Prediction 
-# Prediction 
-pred_test <- predict.gam(model, test_input[, selected_model != 0])
+pred_test <- predict.gam(results$model, test_input[, selected_model != 0])
 
 results <- data.frame(
   Real_Output = test_output,

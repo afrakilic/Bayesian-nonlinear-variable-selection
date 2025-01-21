@@ -48,11 +48,14 @@ compute_stats_knots <- function(col_idx, stat_func = mean) {
   })
 }
 
+trials = 100
 #Correct selection ratio
 knots_correct_select <- compute_stats_knots(col_idx = 1, stat_func = function(x) sum(x == 1) / trials)
 #Posterior probabilities of the true model 
 knots_post_prob <- compute_stats_knots(col_idx = 2, stat_func = mean)
 
+knots_correct_select
+knots_post_prob
 
 
 ######################################################################################################
