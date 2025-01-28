@@ -63,7 +63,7 @@ for (n in sample_sizes) {
 
 
 # Define trials
-trials <- 10
+trials <- 100
 
 # Generalized function to compute statistics for a given beta and column index
 compute_stats <- function(beta, col_idx, stat_func = mean) {

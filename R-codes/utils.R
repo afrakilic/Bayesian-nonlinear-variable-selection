@@ -8,7 +8,10 @@
 
 # Libraries
 library(mgcv)# For generalized additive models
-library(data.table)    
+library(data.table)   
+library(ggplot2)
+library(glmnet)
+source("R-codes/bayesian_selection.R")  
 
 # This script implements a simulation framework for Bayesian variable selection in linear 
 # and nonlinear models. The goal is to identify which predictor variables have linear, 
@@ -153,4 +156,78 @@ run_bayesian_selection <- function(beta = 0.8, sample_size = 100, n_var = 10, tr
   return(results)
 }
 
+#########################################################################################
+######            FUNCTION: empirical study BVS vs. LASSO                          #####
+#########################################################################################
 
+# This function evaluates and compares the performance of two models: 
+# a user-selected model (which could include both linear and nonlinear components) 
+# and a LASSO regression model. It calculates the inclusion rates of linear and 
+# nonlinear variables for the selected model, computes the Root Mean Squared Error (RMSE) 
+# for both the selected model and the LASSO model, and outputs a table comparing 
+# these metrics. The function takes training and testing data, as well as the number of 
+# knots to be used in the selected model, as inputs.
+
+evaluate_model <- function(selected_model, train_input, train_output, test_input, test_output, knots = 3) {
+  # Inclusion Rates
+  nonlinear_rate <- sum(selected_model == 2) / ncol(train_input)
+  linear_rate <- sum(selected_model == 1) / ncol(train_input)
+  
+  # Model Training with the Selected Model
+  results <- selected_model_train(
+    data = train_input,
+    output = train_output,
+    selected_model = selected_model,
+    knots = knots,
+    plot_title = "Training Predictions vs Real Output"
+  )
+  
+  # Prediction
+  pred_test <- predict.gam(results$model, test_input[, selected_model != 0])
+  
+  # RMSE for the selected model
+  rmse_test <- sqrt(mean((test_output - pred_test)^2))
+  
+  # LASSO
+  x <- as.matrix(train_input)
+  y <- train_output
+  cv_lasso <- cv.glmnet(x, y, alpha = 1)
+  
+  # Best lambda value
+  best_lambda <- cv_lasso$lambda.min
+  
+  # Final LASSO model
+  final_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+  
+  # Number of variables included
+  total_included <- sum(coef(final_model) != 0) - 1
+  inclusion_rate_lasso <- total_included / ncol(train_input)
+  
+  # Predict using the LASSO model
+  predictions <- predict(final_model, s = best_lambda, newx = as.matrix(test_input))
+  rmse_test_lasso <- sqrt(mean((test_output - predictions)^2))
+  
+  # Create a results table
+  results_table <- data.frame(
+    Metric = c(
+      "Nonlinear Variable Inclusion Rate",
+      "Linear Variable Inclusion Rate",
+      "Selected Model RMSE",
+      "LASSO Inclusion Rate",
+      "LASSO RMSE"
+    ),
+    Value = c(
+      nonlinear_rate,
+      linear_rate,
+      rmse_test,
+      inclusion_rate_lasso,
+      rmse_test_lasso
+    )
+  )
+  
+  # Print the results table
+  print(results_table)
+  
+  # Return the results table
+  return(results_table)
+}

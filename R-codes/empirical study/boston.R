@@ -9,7 +9,9 @@
 
 
 source("R-codes/bayesian_selection.R")  # Ensure the script is in the working directory
+source("R-codes/utils.R") 
 library(glmnet)
+
 # Data preparation
 data(boston, package = "spdep")
 
@@ -32,11 +34,12 @@ X <- as.data.frame(cbind(
 
 # Vector of responses
 y <- boston.c$CMEDV
-y <- y - mean(y)
-#Quadratic terms
-#for (i in 1:ncol(X)) {
- # X[[paste0("V", i, "_quadratic")]] <- X[[i]]^2
-#}
+y <- y - mean(y) #centering y 
+
+#Quadratic terms  COMMENT THIS PART WHEN FITTING BVS
+for (i in 1:ncol(X)) {
+  X[[paste0("V", i, "_quadratic")]] <- X[[i]]^2
+}
 
 # Interaction terms
 variable_names <- colnames(X[, 1:13])
@@ -64,69 +67,12 @@ boston_results <- bayesian_selection(X = train_input, y=train_output, knots=8, i
 
 selected_model <- boston_results$`selected model`
 
-boston_91 <- boston_results
-
 # Model Training with the Selected Model 
-
-results <- selected_model_train(
-  data = train_input,
-  output = train_output,
-  selected_model = selected_model,
-  knots = 8,
-  plot_title = "Training Predictions vs Real Output"
+results <- evaluate_model(
+  selected_model =selected_model,
+  train_input = train_input,
+  train_output = train_output,
+  test_input = test_input,
+  test_output = test_output,
+  knots = 10
 )
-
-# Prediction 
-pred_test <- predict.gam(results$model, test_input[, selected_model != 0])
-
-results <- data.frame(
-  Real_Output = test_output,
-  Predicted_Output = pred_test
-)
-
-# Plot for the fitted values 
-ggplot(results, aes(x = Real_Output, y = Predicted_Output)) +
-  geom_point(color = "blue", alpha = 0.6) + # Scatter points
-  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") + # Line y=x
-  labs(
-    title = "Predictions vs Real Output",
-    x = "Real Output (y)",
-    y = "Predicted Output"
-  ) +
-  theme_minimal()
-
-rmse_test <- sqrt(mean((test_output - pred_test)^2))
-
-print(paste("RMSE:", rmse_test))
-
-
-
-#LASSO 
-x = as.matrix(train_input)
-y = train_output
-cv_lasso <- cv.glmnet(x, y, alpha = 1)
-
-# Best lambda value
-best_lambda <- cv_lasso$lambda.min
-print(best_lambda)
-final_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
-
-# Predict using the final model
-predictions <- predict(final_model, s = best_lambda, newx = as.matrix(test_input))
-rmse_test_lasso <- sqrt(mean((test_output - predictions)^2))
-rmse_test_lasso
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-

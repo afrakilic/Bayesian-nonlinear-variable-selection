@@ -1,5 +1,3 @@
-
-
 #### Title: Bayesian Variable Selection for linear and Nonlinear Model
 #### Author: Afra Kilic
 #### Created: August, 2023
@@ -13,13 +11,17 @@ library(mgcv)
 library(gtools)
 library(progress)
 library(data.table)
+library(ggplot2)
 
 #########################################################################################
+
+# Main function for Bayesian Variable Selection to select the best possible model from the model space
 
 bayesian_selection <- function(X, #matrix of predictor variables 
                                y, #the outcome variable
                                knots= 4, #number of knots
                                penalty=knots-2, #adjusted degrees of freedom for each smooth
+                               fam = "gaussian()", 
                                iteration=1000, #burn-in
                                gamma_prior = c(rep(0, dim(X)[2])), #initial gamma values set to zero, alternatively can be set to different initial values
                                prior_p=c(1/3, 1/3, 1/3)) { #initial probabilities for each effect type set to equal probabilities as 1/3. )
@@ -98,7 +100,7 @@ bayesian_selection <- function(X, #matrix of predictor variables
           M3 <- gam(y ~ 1 + s(a, k=knots),  data = data)
         }
         
-        #BIC scores 
+        #BIC scores for model comparison
         bic_M1 <- (-2) * head(logLik(M1)) +  attr(logLik(M1), "df")* log(n)
         bic_M2 <- (-2) * head(logLik(M2)) +  attr(logLik(M2), "df")* log(n)
         bic_M3 <- (-2) * head(logLik(M3)) +  (attr(logLik(M2), "df") + penalty)* log(n) #penalty depends on the #of knots
@@ -139,5 +141,81 @@ bayesian_selection <- function(X, #matrix of predictor variables
                   "selected model" = as.vector(frequency[1,1:n_var]),
                   "gamma draws" = gamma_draws,
                   "p draws" = ps)
+  print("posterior probabilty of the selected model" = pp_s)
   return(results)
 } 
+
+
+#########################################################################################
+
+# The `selected_model_train` function trains a Generalized Additive Model (GAM) using the variables selected by a Bayesian model. 
+# It identifies linear and nonlinear effects, fits the model, and evaluates its performance by calculating RMSE. 
+# Additionally, it creates a scatter plot comparing the predicted and actual output values.
+
+
+selected_model_train <- function(data, 
+                                     output, 
+                                     selected_model, 
+                                     knots = 8, 
+                                     plot_title = "Predictions vs Real Output") {
+  # Model Training
+  
+  # For linear effects
+  linears <- c()
+  if (length(selected_model[selected_model == 1]) != 0) {
+    for (i in 1:ncol(data[which(selected_model == 1)])) {
+      linears <- c(linears, paste(c(colnames(data[which(selected_model == 1)][i])), collapse = ""))
+    }
+  }
+  
+  # For nonlinear effects
+  non_linears <- c()
+  if (length(selected_model[selected_model == 2]) != 0) {
+    for (i in 1:ncol(data[which(selected_model == 2)])) {
+      non_linears <- c(non_linears, 
+                       paste(c('s(', colnames(data[which(selected_model == 2)][i]), ',k=', knots, ')'), collapse = ""))
+    }
+  }
+  
+  # Combine linear and nonlinear variables
+  vars <- c(linears, non_linears)
+  
+  # Train the model using `gam`
+  model <- gam(as.formula(paste('output', '~ 1 + ', paste(vars, collapse = "+"))), data = data)
+  
+  # Predictions on training data
+  pred_train <- predict(model, data)
+  
+  # Combine predictions and actual values into a dataframe for easy plotting
+  results <- data.frame(
+    Real_Output = output,
+    Predicted_Output = pred_train
+  )
+  
+  # Plot for the fitted values
+  plot <- ggplot(results, aes(x = Real_Output, y = Predicted_Output)) +
+    geom_point(color = "blue", alpha = 0.6) +  # Scatter points
+    geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +  # Line y=x
+    labs(
+      title = plot_title,
+      x = "Real Output (y)",
+      y = "Predicted Output"
+    ) +
+    theme_minimal()
+  
+  # RMSE calculation
+  rmse_train <- sqrt(mean((output - pred_train)^2))
+  print(paste("RMSE Training Data:", rmse_train))
+  
+  # Return results as a list
+  return(list(
+    model = model,
+    predictions = pred_train,
+    rmse = rmse_train,
+    plot = plot
+  ))
+}
+
+
+
+
